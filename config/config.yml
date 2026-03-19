@@ -1,0 +1,64 @@
+# ── Pipeline 全局运行参数 ─────────────────────────────────────
+pipeline:
+  score_threshold: 8.5   # 只有 LLM 打分高于此值的内容才会推送（大脑的门槛）
+  max_dispatch: 10       # 单次推送最多包含 10 条最精选资讯，防止信息过载
+  state_ttl_days: 14     # 已读记录保留 14 天，确保两周内不重复
+
+# ── 语言模型配置 (The Brain) ──────────────────────────────────
+llm:
+  provider: "deepseek"   # 可选: deepseek, openai
+  concurrency: 5         # 并发请求数。建议 DeepSeek 设为 5-10，OpenAI 10-20
+  retry_attempts: 3      # API 失败后的重试次数
+
+# ── 采集源配置 (The Sensors) ──────────────────────────────────
+collectors:
+  # 1. 国际官方源 (RSS)
+  rss:
+    enabled: true
+    feeds:
+      "OpenAI":          "https://openai.com/news/rss.xml"
+      "DeepMind":        "https://deepmind.google/blog/feed/basic/"
+      "NVIDIA":          "https://nvidianews.nvidia.com/releases.xml"
+      "HuggingFace":     "https://huggingface.co/blog/feed.xml"
+      "Google Research": "https://blog.google/technology/ai/rss/"
+
+  # 2. 国内媒体源 (Jina Reader 模式)
+  jina_web:
+    enabled: true
+    urls:
+      "36氪快讯": "https://36kr.com/newsflashes"
+      "量子位": "https://www.qbitai.com/"
+      "机器之心": "https://www.jiqizhixin.com/"
+      "钛媒体 AI": "https://www.tmtpost.com/category/66"
+      "InfoQ AI": "https://www.infoq.cn/topic/11"
+
+  # 3. 论文源 (ArXiv)
+  arxiv:
+    enabled: true
+    categories: ["cs.AI", "cs.CL", "cs.LG", "cs.RO"]
+    max_results: 20 
+
+  # 4. 开发者社区 (GitHub & HN)
+  github:
+    enabled: true
+    languages: ["Python", "TypeScript", "Rust"]
+    topics: ["llm", "agent", "rag"]
+    min_stars: 50        # 最近一周新增 Star 数门槛
+  
+  hackernews:
+    enabled: true
+    keywords: ["GPT", "Claude", "LLM", "Nvidia", "DeepSeek", "Agent"]
+    min_score: 100       # 只有热门帖子才进入评估环节
+
+  # 5. Reddit 深度讨论
+  reddit:
+    enabled: true
+    subreddits: ["MachineLearning", "LocalLLaMA", "artificial"]
+    min_score: 150       # 过滤掉低质量水贴
+
+# ── 分发器配置 (The Voice) ────────────────────────────────────
+dispatchers:
+  wecom:
+    enabled: true
+    # 建议通过环境变量 WECOM_WEBHOOK_URL 注入，此处留空或填写默认值
+    webhook_url: "YOUR_WECOM_WEBHOOK_URL"

@@ -1,0 +1,20 @@
+# --- 核心框架与配置 ---
+pyyaml>=6.0.1
+# 推荐使用 aiohttp 来实现 config.yml 中的并发采集逻辑
+aiohttp>=3.9.0
+# 用于简单的同步 HTTP 请求
+requests>=2.31.0
+
+# --- 采集器专用 (Collectors) ---
+# 用于处理 OpenAI 订阅等 RSS 源
+feedparser>=6.0.10
+# 用于解析 Jina Web 返回的内容或网页清理
+beautifulsoup4>=4.12.0
+
+# --- AI 与逻辑 (LLM & Filters) ---
+# DeepSeek 兼容 OpenAI 协议，使用此库最稳健
+openai>=1.12.0
+
+# --- 实用工具 ---
+# 如果你在代码中处理时间（如 Arxiv 过滤），推荐加上
+python-dateutil>=2.8.2
