@@ -21,16 +21,18 @@ collectors:
       "NVIDIA":          "https://nvidianews.nvidia.com/releases.xml"
       "HuggingFace":     "https://huggingface.co/blog/feed.xml"
       "Google Research": "https://blog.google/technology/ai/rss/"
+      # --- 国内精选 (新加入) ---
+      "机器之心":         "https://www.almosthuman.cn/feed"
+      "36氪-AI":          "https://36kr.com/feed/tag/671"
+      "量子位":           "https://www.qbitai.com/feed"
+      "少数派-AI":        "https://sspai.com/feed/tag/AI"
+      "钛媒体-AI":        "https://www.tmtpost.com/rss/category/66"
 
   # 2. 国内媒体源 (Jina Reader 模式)
   jina_web:
-    enabled: true
-    urls:
-      "36氪快讯": "https://36kr.com/newsflashes"
-      "量子位": "https://www.qbitai.com/"
-      "机器之心": "https://www.jiqizhixin.com/"
-      "钛媒体 AI": "https://www.tmtpost.com/category/66"
-      "InfoQ AI": "https://www.infoq.cn/topic/11"
+    enabled: false
+    urls: {}
+
 
   # 3. 论文源 (ArXiv)
   arxiv:
@@ -42,8 +44,8 @@ collectors:
   github:
     enabled: true
     languages: ["Python", "TypeScript", "Rust"]
-    topics: ["llm", "agent", "rag"]
-    min_stars: 50        # 最近一周新增 Star 数门槛
+    topics: ["llm", "chinese-llm", "agent"] # 增加 chinese-llm 标签
+    min_stars: 30  
   
   hackernews:
     enabled: true
