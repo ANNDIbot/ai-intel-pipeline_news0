@@ -1,11 +1,3 @@
-"""
-Reddit Collector — AI 相关社区热帖采集
-修复点：
-1. 补全了被截断的 _parse 函数逻辑。
-2. 确保数据解析符合 IntelItem 模型要求。
-3. 增加了时区处理和异常防御。
-"""
-
 import asyncio
 import json
 import logging
