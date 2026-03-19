@@ -1,13 +1,13 @@
-# ── Python 运行环境 ──
+# 忽略 Python 缓存
 __pycache__/
 *.pyc
-venv/
-.env
 
-# ── 状态与日志 (关键：全部忽略，靠 Actions Cache 管理) ──
-state/
-!state/.gitkeep
+# 忽略所有 state 下的文件，但排除 last_seen.json
+state/*
+!state/last_seen.json# 忽略 Python 缓存
+__pycache__/
+*.pyc
 
-# ── 配置文件 ──
-# 如果你以后想在 config 里放敏感信息，可以取消下面注释
-# config/config.yml
+# 忽略所有 state 下的文件，但排除 last_seen.json
+state/*
+!state/last_seen.json
