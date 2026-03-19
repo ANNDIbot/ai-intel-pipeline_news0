@@ -81,7 +81,6 @@ class RedditCollector:
             if item.raw.get("score", 0) >= self.min_score:
                 results.append(item)
         return results
-
     def _parse(self, data: dict, subreddit: str) -> IntelItem:
         """解析 Reddit 原始数据为 IntelItem"""
         score = data.get("score", 0)
