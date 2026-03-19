@@ -80,7 +80,7 @@ async def run_pipeline():
 
     if coll_cfg.get("github", {}).get("enabled"):
         c = coll_cfg["github"]
-        collectors.append(GitHubCollector(languages=c["languages"], topics=c["topics"], min_stars_delta=c.get("min_stars", 50)))
+        collectors.append(GitHubCollector(languages=c["languages"], topics=c["topics"], min_stars=c.get("min_stars", 50)))
 
     if coll_cfg.get("hackernews", {}).get("enabled"):
         c = coll_cfg["hackernews"]
