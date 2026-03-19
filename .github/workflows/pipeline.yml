@@ -1,0 +1,75 @@
+name: AI Intel Pipeline
+
+on:
+  schedule:
+    # 北京时间 10:00 (UTC 02:00)
+    - cron: "0 2 * * *"
+    # 北京时间 22:00 (UTC 14:00)
+    - cron: "0 14 * * *"
+  workflow_dispatch: 
+
+jobs:
+  pipeline:
+    name: Run Intelligence Pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 15 # 15分钟足够，过长可能浪费 Actions 分钟数
+    
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # 必须使用 fetch-depth: 0 以便进行 rebase 和 push
+          fetch-depth: 0 
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # 确保 requirements.txt 包含: pyyaml, aiohttp, requests, feedparser, beautifulsoup4
+          pip install -r requirements.txt
+
+      - name: Prepare Workspace
+        run: |
+          mkdir -p state
+          # 检查配置文件是否存在
+          if [ ! -f "config/config.yml" ]; then
+            echo "❌ Missing config/config.yml"
+            exit 1
+          fi
+
+      - name: Run AI Intel Pipeline
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          WECOM_WEBHOOK_URL: ${{ secrets.WECOM_WEBHOOK_URL }}
+          # 确保根目录和 src 目录都在路径中
+          PYTHONPATH: .:${{ github.workspace }}/src
+        run: python src/main.py
+
+      - name: Sync State (Commit & Push)
+        # 仅在程序成功运行并更新了状态文件时执行
+        if: success() 
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # 1. 暂存状态文件
+          git add state/last_seen.json
+          
+          # 2. 检查是否有实际变动（防止空 commit 报错）
+          if git diff --cached --quiet; then
+            echo "No new news to remember. Skipping push."
+            exit 0
+          fi
+          
+          # 3. 提交并拉取远程改动进行合并
+          git commit -m "chore: update seen articles [skip ci]"
+          git pull --rebase origin main
+          git push origin main
