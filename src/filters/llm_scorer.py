@@ -44,7 +44,7 @@ SYSTEM_PROMPT = """你是一位世界级的 AI 科技分析师。请评估以下
 注意：无论原文是什么语言，reasoning 和 key_insight 必须使用简洁的中文。"""
 
 class LLMScorer:
-    def __init__(self, score_threshold: float = 8.5, provider: str = "deepseek", concurrency: int = 5):
+    def __init__(self, score_threshold: float = 7.0, provider: str = "deepseek", concurrency: int = 5):
         self.score_threshold = score_threshold
         self.concurrency = concurrency
         
