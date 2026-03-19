@@ -2,12 +2,10 @@
 __pycache__/
 *.pyc
 
-# 忽略所有 state 下的文件，但排除 last_seen.json
-state/*
-!state/last_seen.json# 忽略 Python 缓存
-__pycache__/
-*.pyc
+# 忽略整个 state 文件夹下的日志和临时文件
+state/*.log
+state/*.tmp
+state/audit_log.jsonl
 
-# 忽略所有 state 下的文件，但排除 last_seen.json
-state/*
+# 关键：唯独放行去重状态文件 (注意前面的感叹号)
 !state/last_seen.json
