@@ -22,10 +22,10 @@ collectors:
       "HuggingFace":     "https://huggingface.co/blog/feed.xml"
       "Google Research": "https://blog.google/technology/ai/rss/"
       # --- 国内精选 (新加入) ---
-      "机器之心": "https://feeds.feedburner.com/almosthuman" # 或者尝试：https://www.jiqizhixin.com/rss
+      "机器之心": "https://www.jiqizhixin.com/rss"
       "36氪": "https://36kr.com/feed"
-      "量子位": "https://www.qbitai.com/feed"
-      "少数派-AI": "https://sspai.com/feed/tag/AI"
+      "虎嗅-AI": "https://www.huxiu.com/rss/22.xml"
+      "财新-人工智能": "https://www.caixin.com/rss/ai.xml"
 
   # 2. 国内媒体源 (Jina Reader 模式)
   jina_web:
