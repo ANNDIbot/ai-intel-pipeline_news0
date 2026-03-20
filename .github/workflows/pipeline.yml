@@ -49,7 +49,8 @@ jobs:
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           WECOM_WEBHOOK_URL: ${{ secrets.WECOM_WEBHOOK_URL }}
-          # 确保根目录和 src 目录都在路径中
+          # GITHUB_TOKEN 由 Actions 自动提供，注入后 GitHub Trending 采集不再被限速
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PYTHONPATH: .:${{ github.workspace }}/src
         run: python src/main.py
 
