@@ -54,17 +54,25 @@ class GitHubCollector:
         return self._deduplicate(items)
 
     def _search(self, language: str) -> list[IntelItem]:
-        # 1. 构建查询语句：限定最近 7 天更新且星数达标
+        # 问题根因：topic: 标签是仓库作者手动打的，大量 AI 仓库没有打标签
+        # 改为在名称+描述中搜索关键词（in:name,description），命中率大幅提升
         last_week = (datetime.utcnow() - timedelta(days=7)).strftime("%Y-%m-%d")
-        
-        # 将关键词组合
-        topic_q = " OR ".join(f"topic:{t}" for t in self.topics)
-        # 💡 第一性原理优化：直接在查询中过滤 stars，避免浪费配额获取低质量项目
-        query_str = f"({topic_q}) language:{language} stars:>={self.min_stars} pushed:>{last_week}"
-        
+
+        # 高频 AI 关键词，出现在名称或描述里即命中
+        keywords = ["llm", "agent", "rag", "gpt", "claude", "gemini", "deepseek",
+                    "transformer", "diffusion", "multimodal", "embedding", "finetune"]
+        kw_q = " OR ".join(keywords)
+
+        query_str = (
+            f"({kw_q}) in:name,description"
+            f" language:{language}"
+            f" stars:>={self.min_stars}"
+            f" pushed:>{last_week}"
+        )
+
         params = {
             "q": query_str,
-            "sort": "stars",      # 按星数排序
+            "sort": "stars",
             "order": "desc",
             "per_page": 30
         }
