@@ -63,22 +63,33 @@ class DedupFilter:
     def filter(self, items: List[IntelItem]) -> List[IntelItem]:
         """核心过滤逻辑：ID 命中或标题命中均视为重复"""
         fresh = []
-        now = datetime.now(timezone.utc).isoformat()
-        
+        # 用本地集合跟踪本次 run 内的新条目，防止同批次重复（历史状态不含本次）
+        session_ids: set = set()
+        session_titles: set = set()
+
         for item in items:
             norm_title = self._normalize_title(item.title)
-            
-            # 1. 检查 ID 是否存在
+
+            # 1. 检查历史 ID
             if item.id in self.seen_ids:
                 continue
-            
-            # 2. 检查标题是否雷同（防止跨媒体搬运）
-            if norm_title and norm_title in self.seen_titles:
-                logger.debug(f"Title Dedup: 拦截相似内容 -> {item.title[:20]}...")
+            # 2. 检查本次 run 内 ID 重复
+            if item.id in session_ids:
                 continue
-            
+            # 3. 检查历史标题
+            if norm_title and norm_title in self.seen_titles:
+                logger.debug(f"Title Dedup (历史): 拦截相似内容 -> {item.title[:30]}...")
+                continue
+            # 4. 检查本次 run 内标题重复（原始代码 bug：这一步缺失）
+            if norm_title and norm_title in session_titles:
+                logger.debug(f"Title Dedup (本次): 拦截相似内容 -> {item.title[:30]}...")
+                continue
+
             fresh.append(item)
-            
+            session_ids.add(item.id)
+            if norm_title:
+                session_titles.add(norm_title)
+
         logger.info(f"去重结果: 原始 {len(items)} 条 -> 过滤后 {len(fresh)} 条")
         return fresh
 
