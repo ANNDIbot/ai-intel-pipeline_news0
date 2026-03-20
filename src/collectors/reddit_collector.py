@@ -33,8 +33,10 @@ class RedditCollector:
         self.subreddits  = subreddits or SUBREDDITS
         self.min_score   = min_score
         self.max_per_sub = max_per_sub
-        # User-Agent 必须唯一，否则会被 Reddit 封禁
-        self.user_agent  = f"AI-Intel-Pipeline/1.0 (User={os.getenv('GITHUB_REPOSITORY', 'local')})"
+        # Reddit 官方要求格式: <platform>:<app ID>:<version> (by /u/<username>)
+        # 不符合此格式会被识别为爬虫并限速
+        repo = os.getenv('GITHUB_REPOSITORY', 'local/ai-intel-pipeline')
+        self.user_agent = f"linux:ai-intel-pipeline:v1.0 (by /u/{repo.replace('/', '_')})"
 
     async def collect(self) -> List[IntelItem]:
         items = []
