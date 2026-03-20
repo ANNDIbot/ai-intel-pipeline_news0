@@ -23,14 +23,34 @@ collectors:
       "NVIDIA News":        "https://nvidianews.nvidia.com/releases.xml"
       "HuggingFace Blog":   "https://huggingface.co/blog/feed.xml"
       "Google AI Blog":     "https://blog.google/technology/ai/rss/"
-      "Anthropic News":     "https://www.anthropic.com/rss.xml"
-      "Meta AI Blog":       "https://ai.meta.com/blog/feed/"
+      # Anthropic 无官方 RSS，改用 research.google 和 engineering.fb 这两个有 RSS 的替代
+      "Google Research":    "https://research.google/blog/rss/"
+      "Engineering@Meta":   "https://engineering.fb.com/feed/"
       "MIT Tech Review AI": "https://www.technologyreview.com/topic/artificial-intelligence/feed"
       "The Verge AI":       "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"
       "VentureBeat AI":     "https://venturebeat.com/category/ai/feed/"
-      # 中文官方源（媒体直接提供，不依赖第三方代理）
+      "Ars Technica AI":    "https://feeds.arstechnica.com/arstechnica/technology-lab"
+      "TechCrunch AI":      "https://techcrunch.com/category/artificial-intelligence/feed/"
+      # 面向大众的科技新闻（可读性强，覆盖非技术受众）
+      "BBC Technology":     "https://feeds.bbci.co.uk/news/technology/rss.xml"
+      "Reuters Technology": "https://feeds.reuters.com/reuters/technologyNews"
+      "WSJ Tech":           "https://feeds.a.dj.com/rss/RSSWSJD.xml"
+      "Bloomberg Tech":     "https://feeds.bloomberg.com/technology/news.rss"
+      "TIME AI":            "https://time.com/tag/artificial-intelligence/feed/"
+      "Guardian Tech":      "https://www.theguardian.com/technology/artificialintelligenceai/rss"
+      # 投融资/商业动向
+      "Crunchbase News":    "https://news.crunchbase.com/feed/"
+      "TechCrunch Funding": "https://techcrunch.com/category/venture/feed/"
+      # 政策监管
+      "Politico Tech":      "https://rss.politico.com/technology.xml"
+      # 中文大众科技媒体（可读性强，非纯技术向）
       "机器之心":            "https://www.jiqizhixin.com/rss"
       "量子位":              "https://www.qbitai.com/feed"
+      "少数派":              "https://sspai.com/feed"
+      "虎嗅科技":            "https://www.huxiu.com/rss/0.xml"
+      # 今日热榜聚合（静态服务，海外 IP 可访问）
+      "今日热榜-36氪":       "https://tophub.today/n/ObxeE94XZ8/feed"
+      "今日热榜-微博热搜":    "https://tophub.today/n/KqndgxeLl9/feed"
 
   # 2. Jina Web Reader（用于无 RSS 的重点网页，按需启用）
   jina_web:
@@ -58,8 +78,11 @@ collectors:
     min_score: 80
 
   # 5. Reddit
+  # !! Reddit 从 2025 年起对数据中心 IP（包括 GitHub Actions）全面返回 403，
+  # !! 换 User-Agent 也无效。已禁用，不要启用。
+  # !! 替代方案：通过 HackerNews 的 "Show HN" 和 "Ask HN" 帖子间接获取 Reddit 热点。
   reddit:
-    enabled: true
+    enabled: false
     subreddits: ["MachineLearning", "LocalLLaMA", "artificial", "ChatGPT"]
     min_score: 100
 
