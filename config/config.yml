@@ -69,7 +69,9 @@ collectors:
   github:
     enabled: true
     languages: ["Python", "TypeScript", "Rust"]
-    topics: ["llm", "chinese-llm", "agent", "rag", "multimodal"]
+    # topics 字段已不再用于查询（topic 标签命中率太低）
+    # 采集器改为在仓库名称和描述中搜索内置关键词列表
+    topics: []
     min_stars: 30
 
   hackernews:
