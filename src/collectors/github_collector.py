@@ -38,43 +38,42 @@ class GitHubCollector:
         self.topics    = list(set(topics + AI_TOPICS)) # 合并并去重
         self.min_stars = min_stars
 
+    # 关键词分组——每组独立查询，避免 OR 链过长触发 GitHub API 422
+    KEYWORD_GROUPS = [
+        ["llm", "agent", "rag"],
+        ["gpt", "deepseek", "gemini"],
+        ["transformer", "diffusion", "embedding"],
+    ]
+
     async def collect(self) -> list[IntelItem]:
         items = []
-        # GitHub 搜索 API 对并发比较敏感，建议串行处理不同语言以保护 IP
         for lang in self.languages:
-            try:
-                batch = await asyncio.to_thread(self._search, lang)
-                items.extend(batch)
-                logger.info(f"GitHub [{lang}]: 发现 {len(batch)} 个潜在高价值项目")
-                # 稍微延迟，保护 API 频率
-                await asyncio.sleep(1)
-            except Exception as e:
-                logger.warning(f"GitHub {lang} 采集异常: {e}")
-        
-        return self._deduplicate(items)
+            for group in self.KEYWORD_GROUPS:
+                try:
+                    batch = await asyncio.to_thread(self._search, lang, group)
+                    items.extend(batch)
+                    await asyncio.sleep(0.5)
+                except Exception as e:
+                    logger.warning(f"GitHub {lang}/{group[0]}... 采集异常: {e}")
 
-    def _search(self, language: str) -> list[IntelItem]:
-        # 问题根因：topic: 标签是仓库作者手动打的，大量 AI 仓库没有打标签
-        # 改为在名称+描述中搜索关键词（in:name,description），命中率大幅提升
-        last_week = (datetime.utcnow() - timedelta(days=7)).strftime("%Y-%m-%d")
+        deduped = self._deduplicate(items)
+        logger.info(f"GitHub 合计: {len(deduped)} 个项目（去重后）")
+        return deduped
 
-        # 高频 AI 关键词，出现在名称或描述里即命中
-        keywords = ["llm", "agent", "rag", "gpt", "claude", "gemini", "deepseek",
-                    "transformer", "diffusion", "multimodal", "embedding", "finetune"]
+    def _search(self, language: str, keywords: list[str]) -> list[IntelItem]:
+        from datetime import timezone
+        last_week = (datetime.now(timezone.utc) - timedelta(days=7)).strftime("%Y-%m-%d")
+
+        # 正确语法：`word1 OR word2 in:name,description` — qualifier 紧跟搜索词
+        # 不能把 OR 链包在括号里再加 in:，否则触发 422
         kw_q = " OR ".join(keywords)
-
-        query_str = (
-            f"({kw_q}) in:name,description"
-            f" language:{language}"
-            f" stars:>={self.min_stars}"
-            f" pushed:>{last_week}"
-        )
+        query_str = f"{kw_q} in:name,description language:{language} stars:>={self.min_stars} pushed:>{last_week}"
 
         params = {
             "q": query_str,
             "sort": "stars",
             "order": "desc",
-            "per_page": 30
+            "per_page": 10   # 每组取 10 条，3 组 × 3 语言 = 最多 90 条原始数据
         }
         
         encoded_params = urllib.parse.urlencode(params)
