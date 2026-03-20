@@ -33,24 +33,23 @@ collectors:
       "TechCrunch AI":      "https://techcrunch.com/category/artificial-intelligence/feed/"
       # 面向大众的科技新闻（可读性强，覆盖非技术受众）
       "BBC Technology":     "https://feeds.bbci.co.uk/news/technology/rss.xml"
-      "Reuters Technology": "https://feeds.reuters.com/reuters/technologyNews"
+      # Reuters RSS 域名已下线，删除
       "WSJ Tech":           "https://feeds.a.dj.com/rss/RSSWSJD.xml"
       "Bloomberg Tech":     "https://feeds.bloomberg.com/technology/news.rss"
-      "TIME AI":            "https://time.com/tag/artificial-intelligence/feed/"
       "Guardian Tech":      "https://www.theguardian.com/technology/artificialintelligenceai/rss"
       # 投融资/商业动向
       "Crunchbase News":    "https://news.crunchbase.com/feed/"
       "TechCrunch Funding": "https://techcrunch.com/category/venture/feed/"
       # 政策监管
       "Politico Tech":      "https://rss.politico.com/technology.xml"
-      # 中文大众科技媒体（可读性强，非纯技术向）
+      # 中文源（部分在海外 IP 有反爬，失败时静默跳过不影响整体）
       "机器之心":            "https://www.jiqizhixin.com/rss"
       "量子位":              "https://www.qbitai.com/feed"
       "少数派":              "https://sspai.com/feed"
       "虎嗅科技":            "https://www.huxiu.com/rss/0.xml"
-      # 今日热榜聚合（静态服务，海外 IP 可访问）
-      "今日热榜-36氪":       "https://tophub.today/n/ObxeE94XZ8/feed"
-      "今日热榜-微博热搜":    "https://tophub.today/n/KqndgxeLl9/feed"
+      # 今日热榜（路径已更新）
+      "今日热榜-36氪":       "https://tophub.today/n/qq5vm52aqn/feed"
+      "今日热榜-微博热搜":    "https://tophub.today/n/4WPQqQdMK0/feed"
 
   # 2. Jina Web Reader（用于无 RSS 的重点网页，按需启用）
   jina_web:
