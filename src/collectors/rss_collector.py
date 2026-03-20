@@ -34,12 +34,13 @@ class RSSCollector:
     name = "RSS"
 
     def __init__(self, feeds: dict[str, str]):
-        self.feeds = feeds # {"OpenAI": "url", ...}
+        self.feeds = feeds
         self.headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
             "Accept": "application/rss+xml, application/atom+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.7",
             "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
-            "Accept-Encoding": "gzip, deflate",
+            # 明确要求不压缩——urllib 不自动解压 gzip，上次加了 gzip 导致全部 XML 解析失败
+            "Accept-Encoding": "identity",
             "Cache-Control": "no-cache",
         }
 
