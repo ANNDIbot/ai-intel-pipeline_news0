@@ -54,9 +54,9 @@ class RSSCollector:
             req = urllib.request.Request(url, headers=self.headers)
             with urllib.request.urlopen(req, timeout=20) as resp:
                 xml_data = resp.read()
-            
+
             root = ET.fromstring(xml_data)
-            
+
             # 自动识别格式：Atom 还是 RSS 2.0
             if root.tag.endswith("feed"):
                 return self._parse_atom(root, source_name)
@@ -65,8 +65,17 @@ class RSSCollector:
                 if channel is not None:
                     return self._parse_rss(channel, source_name)
                 return []
+        except urllib.error.HTTPError as e:
+            logger.warning(f"RSS源 {source_name} HTTP错误 {e.code}: {url}")
+            return []
+        except urllib.error.URLError as e:
+            logger.warning(f"RSS源 {source_name} 网络错误 (可能被封): {e.reason} — {url}")
+            return []
+        except ET.ParseError as e:
+            logger.warning(f"RSS源 {source_name} XML解析失败: {e} — {url}")
+            return []
         except Exception as e:
-            logger.warning(f"RSS源 {source_name} 采集失败: {e}")
+            logger.warning(f"RSS源 {source_name} 采集失败: {type(e).__name__}: {e}")
             return []
 
     def _parse_atom(self, root: ET.Element, source_name: str) -> list[IntelItem]:
