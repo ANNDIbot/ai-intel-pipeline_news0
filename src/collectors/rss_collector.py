@@ -9,6 +9,7 @@ RSS Collector — 行业动态采集（增强版）
 
 import asyncio
 import hashlib
+import html
 import logging
 import re
 import urllib.request
@@ -122,8 +123,9 @@ class RSSCollector:
         return items
 
     def _create_item(self, source, title, link, raw_content, pub_date) -> IntelItem:
-        # 1. 清理 HTML 标签并处理空白字符
+        # 1. 清理 HTML 标签并反转义实体，减少摘要噪声
         clean_content = re.sub(r"<[^>]+>", " ", raw_content)
+        clean_content = html.unescape(clean_content)
         clean_content = " ".join(clean_content.split()) # 移除多余空格和换行
         
         # 2. 生成基于 URL 的稳定 ID (更鲁棒)
