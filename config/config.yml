@@ -43,18 +43,19 @@ collectors:
       # 政策监管
       "Politico Tech":      "https://rss.politico.com/technology.xml"
       # 中文源（部分在海外 IP 有反爬，失败时静默跳过不影响整体）
-      "机器之心":            "https://www.jiqizhixin.com/rss"
       "量子位":              "https://www.qbitai.com/feed"
       "少数派":              "https://sspai.com/feed"
       "虎嗅科技":            "https://www.huxiu.com/rss/0.xml"
-      # 今日热榜（路径已更新）
-      "今日热榜-36氪":       "https://tophub.today/n/qq5vm52aqn/feed"
-      "今日热榜-微博热搜":    "https://tophub.today/n/4WPQqQdMK0/feed"
+      # TopHub feed 路径近期已失效(404)，改用稳定官方源
+      "36氪快讯":            "https://36kr.com/feed-newsflash"
+      "新浪科技滚动":         "https://rss.sina.com.cn/tech/rollnews.xml"
 
   # 2. Jina Web Reader（用于无 RSS 的重点网页，按需启用）
   jina_web:
     enabled: false
-    urls: {}
+    urls:
+      # 机器之心返回的并非标准 RSS，改由 Jina Web Reader 按需抓取
+      "机器之心": "https://www.jiqizhixin.com/"
     # 示例（按需取消注释）:
     # "智谱AI官网": "https://zhipuai.cn/news"
 
