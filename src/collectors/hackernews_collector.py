@@ -12,6 +12,7 @@ import json
 import logging
 import urllib.request
 import urllib.error
+import time
 from datetime import datetime
 from typing import Optional, Any
 import sys
@@ -80,6 +81,7 @@ class HackerNewsCollector:
             except (urllib.error.URLError, ConnectionResetError) as e:
                 if i < retries:
                     time_to_sleep = (i + 1) * 2
+                    time.sleep(time_to_sleep)
                     continue
                 logger.warning(f"无法访问 HN API ({url}): {e}")
                 break
