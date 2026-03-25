@@ -2,10 +2,10 @@ name: AI Intel Pipeline
 
 on:
   schedule:
-    # 北京时间 10:00 (UTC 02:00)
-    - cron: "0 2 * * *"
-    # 北京时间 22:00 (UTC 14:00)
-    - cron: "0 14 * * *"
+    # 北京时间 8:00 (UTC 00:00)
+    - cron: "0 0 * * *"
+    # 北京时间 20:00 (UTC 12:00)
+    - cron: "0 12 * * *"
   workflow_dispatch: 
 
 jobs:
